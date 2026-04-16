@@ -5,58 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ShopNova — Home</title>
 
-  <!-- 🔹 Google Analytics 4 snippet (replace G-XXXXXXXXXX with your Measurement ID) -->
+  <!-- Google Analytics 4 — replace G-XXXXXXXXXX with your Measurement ID -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6515P8BELK"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
     gtag('js', new Date());
-    gtag('config', 'G-6515P8BELK');   // ← replace with your real ID
-
-    // ── Custom event helpers ──────────────────────────────────────────────────
-    function trackEvent(eventName, params = {}) {
-      gtag('event', eventName, params);
-      logToUI(eventName, params);       // visual feedback for demo only
-    }
-
-    function trackCTA(label) {
-      trackEvent('cta_click', { button_label: label, page_location: window.location.href });
-    }
-
-    function trackProductView(name, id, price) {
-      trackEvent('view_item', {
-        currency: 'USD',
-        value: price,
-        items: [{ item_id: id, item_name: name, price }]
-      });
-    }
-
-    function trackAddToCart(name, id, price) {
-      trackEvent('add_to_cart', {
-        currency: 'USD',
-        value: price,
-        items: [{ item_id: id, item_name: name, price }]
-      });
-    }
-
-    function trackSearch(term) {
-      trackEvent('search', { search_term: term });
-    }
-
-    function trackScrollDepth(pct) {
-      trackEvent('scroll', { percent_scrolled: pct });
-    }
-
-    // ── Demo-only log panel ───────────────────────────────────────────────────
-    const evLog = [];
-    function logToUI(name, params) {
-      evLog.unshift({ name, params, ts: new Date().toLocaleTimeString() });
-      const el = document.getElementById('ev-log');
-      if (!el) return;
-      el.innerHTML = evLog.slice(0, 6).map(e =>
-        `<div class="ev-row"><span class="ev-time">${e.ts}</span><span class="ev-name">${e.name}</span><span class="ev-params">${JSON.stringify(e.params)}</span></div>`
-      ).join('');
-    }
+    gtag('config', 'G-6515P8BELK');
   </script>
 
   <style>
@@ -78,7 +33,7 @@
     html { scroll-behavior: smooth; }
     body { font-family: 'Outfit', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
 
-    /* ─── NAV ─── */
+    /* NAV */
     nav {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
@@ -113,7 +68,7 @@
     .btn-outline { background: transparent; border: 1.5px solid var(--ink); color: var(--ink); }
     .btn-outline:hover { background: var(--ink); color: var(--paper); }
 
-    /* ─── HERO ─── */
+    /* HERO */
     .hero {
       display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 520px;
       overflow: hidden;
@@ -149,11 +104,11 @@
     .hero-product-card .prod-name { font-size:.95rem; opacity:.75; margin-top:4px; }
     .hero-product-card .prod-tag { display:inline-block; margin-top:14px; background:var(--accent); color:#fff; border-radius:999px; padding:5px 16px; font-size:.8rem; font-weight:500; }
 
-    /* ─── SECTION TITLE ─── */
+    /* SECTION */
     .section-title { font-family:'Syne',sans-serif; font-weight:800; font-size:1.75rem; letter-spacing:-1px; margin-bottom:32px; }
     .section-title span { color:var(--accent); }
 
-    /* ─── PRODUCTS ─── */
+    /* PRODUCTS */
     .products-section { padding: 72px 48px; }
     .products-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
     .product-card {
@@ -161,10 +116,7 @@
       overflow:hidden; cursor:pointer; transition:transform .25s, box-shadow .25s;
     }
     .product-card:hover { transform:translateY(-6px); box-shadow:0 24px 48px rgba(0,0,0,.1); }
-    .product-img {
-      height: 180px; display:flex; align-items:center; justify-content:center;
-      font-size:4rem; font-weight:800;
-    }
+    .product-img { height: 180px; display:flex; align-items:center; justify-content:center; font-size:4rem; }
     .product-info { padding:18px 20px; }
     .product-name { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; letter-spacing:-.3px; }
     .product-price { color:var(--muted); font-size:.9rem; margin-top:4px; }
@@ -175,7 +127,7 @@
     .btn-sm-ghost { background:transparent; border:1px solid var(--border); color:var(--ink); }
     .btn-sm-ghost:hover { border-color:var(--ink); }
 
-    /* ─── PROMO BAND ─── */
+    /* PROMO */
     .promo-band {
       background:var(--ink); color:var(--paper); padding:56px 48px;
       display:flex; align-items:center; justify-content:space-between; gap:24px;
@@ -183,60 +135,40 @@
     .promo-band h2 { font-family:'Syne',sans-serif; font-size:1.9rem; font-weight:800; letter-spacing:-1px; max-width:480px; }
     .promo-band h2 em { color:var(--accent); font-style:normal; }
 
-    /* ─── GA EVENT LOG (demo widget) ─── */
-    .ga-panel {
-      position:fixed; bottom:16px; right:16px; z-index:999;
-      width:340px; background:#0d0d0d; border-radius:12px; overflow:hidden;
-      border:1px solid #2a2a2a; box-shadow:0 16px 40px rgba(0,0,0,.4);
-    }
-    .ga-header {
-      background:#1a1a1a; padding:10px 14px; display:flex; align-items:center; gap:8px;
-      font-size:.75rem; font-weight:600; color:#fff; letter-spacing:.5px; text-transform:uppercase;
-    }
-    .ga-dot { width:8px; height:8px; border-radius:50%; background:#e84d2e; animation:blink 1.4s ease-in-out infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
-    #ev-log { padding:10px 14px; max-height:180px; overflow-y:auto; }
-    .ev-row { display:grid; grid-template-columns:70px auto 1fr; gap:8px; font-size:.72rem; padding:5px 0; border-bottom:1px solid #1f1f1f; }
-    .ev-row:last-child { border:none; }
-    .ev-time { color:#555; }
-    .ev-name { color:#e84d2e; font-weight:600; white-space:nowrap; }
-    .ev-params { color:#888; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .ga-empty { color:#444; font-size:.75rem; padding:16px; text-align:center; }
-
-    /* ─── FOOTER ─── */
+    /* FOOTER */
     footer { padding:32px 48px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:.82rem; }
   </style>
 </head>
 <body>
 
-<!-- ─── NAV ─── -->
+<!-- NAV -->
 <nav>
   <div class="logo">Shop<span>Nova</span></div>
   <ul class="nav-links">
-    <li><a href="#" onclick="trackEvent('nav_click',{link:'Home'})">Home</a></li>
-    <li><a href="#" onclick="trackEvent('nav_click',{link:'Shop'})">Shop</a></li>
-    <li><a href="#" onclick="trackEvent('nav_click',{link:'Deals'})">Deals</a></li>
-    <li><a href="#" onclick="trackEvent('nav_click',{link:'About'})">About</a></li>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Shop</a></li>
+    <li><a href="#">Deals</a></li>
+    <li><a href="#">About</a></li>
   </ul>
   <div class="nav-right">
     <div class="search-wrap">
       <input type="text" id="search-input" placeholder="Search products…" />
-      <button onclick="handleSearch()">⌕</button>
+      <button>⌕</button>
     </div>
-    <button class="btn btn-outline" onclick="trackCTA('Sign In')">Sign In</button>
-    <button class="btn btn-primary" onclick="trackCTA('Get Started')">Get Started</button>
+    <button class="btn btn-outline">Sign In</button>
+    <button class="btn btn-primary">Get Started</button>
   </div>
 </nav>
 
-<!-- ─── HERO ─── -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-copy">
     <p class="hero-eyebrow">New arrivals · Spring 2025</p>
     <h1 class="hero-h1">Products you'll <em>actually</em> love.</h1>
     <p class="hero-sub">Curated picks, unbeatable prices. Free shipping on orders over $50.</p>
     <div class="hero-actions">
-      <button class="btn btn-primary" onclick="trackCTA('Shop Now')">Shop Now →</button>
-      <button class="btn btn-outline" onclick="trackCTA('View Deals')">View Deals</button>
+      <button class="btn btn-primary">Shop Now →</button>
+      <button class="btn btn-outline">View Deals</button>
     </div>
   </div>
   <div class="hero-img">
@@ -249,43 +181,43 @@
   </div>
 </section>
 
-<!-- ─── PRODUCTS ─── -->
+<!-- PRODUCTS -->
 <section class="products-section" id="products">
   <div class="section-title">Featured <span>Products</span></div>
   <div class="products-grid">
 
-    <div class="product-card" onclick="trackProductView('Wireless Earbuds','SKU-001',89)">
+    <div class="product-card">
       <div class="product-img" style="background:#f0f4ff;">🎧</div>
       <div class="product-info">
         <div class="product-name">Wireless Earbuds</div>
         <div class="product-price">$89.00</div>
         <div class="product-actions">
-          <button class="btn-sm btn-sm-solid" onclick="event.stopPropagation();trackAddToCart('Wireless Earbuds','SKU-001',89)">Add to Cart</button>
-          <button class="btn-sm btn-sm-ghost" onclick="event.stopPropagation();trackEvent('wishlist_add',{item:'Wireless Earbuds'})">♡ Save</button>
+          <button class="btn-sm btn-sm-solid">Add to Cart</button>
+          <button class="btn-sm btn-sm-ghost">♡ Save</button>
         </div>
       </div>
     </div>
 
-    <div class="product-card" onclick="trackProductView('Smart Watch','SKU-002',199)">
+    <div class="product-card">
       <div class="product-img" style="background:#fff5f0;">⌚</div>
       <div class="product-info">
         <div class="product-name">Smart Watch</div>
         <div class="product-price">$199.00</div>
         <div class="product-actions">
-          <button class="btn-sm btn-sm-solid" onclick="event.stopPropagation();trackAddToCart('Smart Watch','SKU-002',199)">Add to Cart</button>
-          <button class="btn-sm btn-sm-ghost" onclick="event.stopPropagation();trackEvent('wishlist_add',{item:'Smart Watch'})">♡ Save</button>
+          <button class="btn-sm btn-sm-solid">Add to Cart</button>
+          <button class="btn-sm btn-sm-ghost">♡ Save</button>
         </div>
       </div>
     </div>
 
-    <div class="product-card" onclick="trackProductView('Laptop Stand','SKU-003',49)">
+    <div class="product-card">
       <div class="product-img" style="background:#f0fff4;">💻</div>
       <div class="product-info">
         <div class="product-name">Laptop Stand</div>
         <div class="product-price">$49.00</div>
         <div class="product-actions">
-          <button class="btn-sm btn-sm-solid" onclick="event.stopPropagation();trackAddToCart('Laptop Stand','SKU-003',49)">Add to Cart</button>
-          <button class="btn-sm btn-sm-ghost" onclick="event.stopPropagation();trackEvent('wishlist_add',{item:'Laptop Stand'})">♡ Save</button>
+          <button class="btn-sm btn-sm-solid">Add to Cart</button>
+          <button class="btn-sm btn-sm-ghost">♡ Save</button>
         </div>
       </div>
     </div>
@@ -293,41 +225,17 @@
   </div>
 </section>
 
-<!-- ─── PROMO BAND ─── -->
+<!-- PROMO -->
 <div class="promo-band">
   <h2>Get <em>20% off</em> your first order. Use code <em>NOVA20</em>.</h2>
-  <button class="btn btn-primary" onclick="trackCTA('Claim Discount')">Claim Discount →</button>
+  <button class="btn btn-primary">Claim Discount →</button>
 </div>
 
-<!-- ─── FOOTER ─── -->
+<!-- FOOTER -->
 <footer>
   <div>© 2025 ShopNova. All rights reserved.</div>
   <div>GA4 Measurement ID: <code>G-6515P8BELK</code></div>
 </footer>
 
-<!-- ─── GA EVENT LOG PANEL (demo only — remove in production) ─── -->
-<div class="ga-panel">
-  <div class="ga-header"><div class="ga-dot"></div> GA4 Event Log (demo)</div>
-  <div id="ev-log"><div class="ga-empty">Interact with the page to fire events →</div></div>
-</div>
-
-<script>
-  // Search handler
-  function handleSearch() {
-    const val = document.getElementById('search-input').value.trim();
-    if (val) { trackSearch(val); document.getElementById('search-input').value = ''; }
-  }
-  document.getElementById('search-input').addEventListener('keydown', e => { if (e.key==='Enter') handleSearch(); });
-
-  // Scroll depth tracking (25 / 50 / 75 / 90 %)
-  const scrollMilestones = new Set();
-  window.addEventListener('scroll', () => {
-    const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-    [25,50,75,90].forEach(m => { if (pct >= m && !scrollMilestones.has(m)) { scrollMilestones.add(m); trackScrollDepth(m); } });
-  });
-
-  // Page view already fired by gtag('config',…) above — log it to the panel
-  logToUI('page_view', { page_title: document.title, page_location: window.location.href });
-</script>
 </body>
 </html>
