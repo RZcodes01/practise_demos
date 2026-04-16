@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopNova — Home</title>
+
+  <!-- 🔹 Google Analytics 4 snippet (replace G-XXXXXXXXXX with your Measurement ID) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');   // ← replace with your real ID
+
+    // ── Custom event helpers ──────────────────────────────────────────────────
+    function trackEvent(eventName, params = {}) {
+      gtag('event', eventName, params);
+      logToUI(eventName, params);       // visual feedback for demo only
+    }
+
+    function trackCTA(label) {
+      trackEvent('cta_click', { button_label: label, page_location: window.location.href });
+    }
+
+    function trackProductView(name, id, price) {
+      trackEvent('view_item', {
+        currency: 'USD',
+        value: price,
+        items: [{ item_id: id, item_name: name, price }]
+      });
+    }
+
+    function trackAddToCart(name, id, price) {
+      trackEvent('add_to_cart', {
+        currency: 'USD',
+        value: price,
+        items: [{ item_id: id, item_name: name, price }]
+      });
+    }
+
+    function trackSearch(term) {
+      trackEvent('search', { search_term: term });
+    }
+
+    function trackScrollDepth(pct) {
+      trackEvent('scroll', { percent_scrolled: pct });
+    }
+
+    // ── Demo-only log panel ───────────────────────────────────────────────────
+    const evLog = [];
+    function logToUI(name, params) {
+      evLog.unshift({ name, params, ts: new Date().toLocaleTimeString() });
+      const el = document.getElementById('ev-log');
+      if (!el) return;
+      el.innerHTML = evLog.slice(0, 6).map(e =>
+        `<div class="ev-row"><span class="ev-time">${e.ts}</span><span class="ev-name">${e.name}</span><span class="ev-params">${JSON.stringify(e.params)}</span></div>`
+      ).join('');
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Outfit:wght@300;400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0d0d0d;
+      --paper: #f7f4ef;
+      --accent: #e84d2e;
+      --accent2: #2e6fe8;
+      --muted: #7a7670;
+      --card: #ffffff;
+      --border: #e2ded7;
+      --radius: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Outfit', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 60px;
+      background: rgba(247,244,239,.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.35rem; letter-spacing: -1px; }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--ink); font-size: .9rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-right { display: flex; gap: 12px; align-items: center; }
+    .search-wrap { position: relative; }
+    .search-wrap input {
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 7px 36px 7px 14px; font-size: .85rem; background: transparent;
+      outline: none; width: 180px; font-family: 'Outfit',sans-serif;
+      transition: border-color .2s, width .3s;
+    }
+    .search-wrap input:focus { border-color: var(--accent2); width: 220px; }
+    .search-wrap button {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: var(--muted); font-size: 1rem;
+    }
+    .btn {
+      padding: 8px 20px; border-radius: 999px; font-family: 'Outfit',sans-serif;
+      font-weight: 500; font-size: .88rem; cursor: pointer; border: none; transition: .2s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #c93e23; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--ink); color: var(--ink); }
+    .btn-outline:hover { background: var(--ink); color: var(--paper); }
+
+    /* ─── HERO ─── */
+    .hero {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 520px;
+      overflow: hidden;
+    }
+    .hero-copy {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 72px 64px; gap: 24px;
+    }
+    .hero-eyebrow { font-size: .78rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
+    .hero-h1 { font-family: 'Syne',sans-serif; font-size: clamp(2.4rem,4vw,3.6rem); font-weight: 800; line-height: 1.08; letter-spacing: -2px; }
+    .hero-h1 em { color: var(--accent); font-style: normal; }
+    .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 420px; line-height: 1.65; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-img {
+      background: linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#e84d2e22 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-blob {
+      width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle, #e84d2e55 0%, transparent 70%);
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.18)} }
+    .hero-product-card {
+      position: relative; z-index: 2;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 20px; padding: 28px 32px; text-align: center; color: #fff;
+      backdrop-filter: blur(8px);
+    }
+    .hero-product-card .big-price { font-family:'Syne',sans-serif; font-size: 2.5rem; font-weight:800; }
+    .hero-product-card .prod-name { font-size:.95rem; opacity:.75; margin-top:4px; }
+    .hero-product-card .prod-tag { display:inline-block; margin-top:14px; background:var(--accent); color:#fff; border-radius:999px; padding:5px 16px; font-size:.8rem; font-weight:500; }
+
+    /* ─── SECTION TITLE ─── */
+    .section-title { font-family:'Syne',sans-serif; font-weight:800; font-size:1.75rem; letter-spacing:-1px; margin-bottom:32px; }
+    .section-title span { color:var(--accent); }
+
+    /* ─── PRODUCTS ─── */
+    .products-section { padding: 72px 48px; }
+    .products-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+    .product-card {
+      background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+      overflow:hidden; cursor:pointer; transition:transform .25s, box-shadow .25s;
+    }
+    .product-card:hover { transform:translateY(-6px); box-shadow:0 24px 48px rgba(0,0,0,.1); }
+    .product-img {
+      height: 180px; display:flex; align-items:center; justify-content:center;
+      font-size:4rem; font-weight:800;
+    }
+    .product-info { padding:18px 20px; }
+    .product-name { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; letter-spacing:-.3px; }
+    .product-price { color:var(--muted); font-size:.9rem; margin-top:4px; }
+    .product-actions { display:flex; gap:8px; margin-top:14px; }
+    .btn-sm { padding:6px 16px; font-size:.82rem; border-radius:999px; cursor:pointer; border:none; font-family:'Outfit',sans-serif; font-weight:500; transition:.2s; }
+    .btn-sm-solid { background:var(--ink); color:var(--paper); }
+    .btn-sm-solid:hover { background:#333; }
+    .btn-sm-ghost { background:transparent; border:1px solid var(--border); color:var(--ink); }
+    .btn-sm-ghost:hover { border-color:var(--ink); }
+
+    /* ─── PROMO BAND ─── */
+    .promo-band {
+      background:var(--ink); color:var(--paper); padding:56px 48px;
+      display:flex; align-items:center; justify-content:space-between; gap:24px;
+    }
+    .promo-band h2 { font-family:'Syne',sans-serif; font-size:1.9rem; font-weight:800; letter-spacing:-1px; max-width:480px; }
+    .promo-band h2 em { color:var(--accent); font-style:normal; }
+
+    /* ─── GA EVENT LOG (demo widget) ─── */
+    .ga-panel {
+      position:fixed; bottom:16px; right:16px; z-index:999;
+      width:340px; background:#0d0d0d; border-radius:12px; overflow:hidden;
+      border:1px solid #2a2a2a; box-shadow:0 16px 40px rgba(0,0,0,.4);
+    }
+    .ga-header {
+      background:#1a1a1a; padding:10px 14px; display:flex; align-items:center; gap:8px;
+      font-size:.75rem; font-weight:600; color:#fff; letter-spacing:.5px; text-transform:uppercase;
+    }
+    .ga-dot { width:8px; height:8px; border-radius:50%; background:#e84d2e; animation:blink 1.4s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+    #ev-log { padding:10px 14px; max-height:180px; overflow-y:auto; }
+    .ev-row { display:grid; grid-template-columns:70px auto 1fr; gap:8px; font-size:.72rem; padding:5px 0; border-bottom:1px solid #1f1f1f; }
+    .ev-row:last-child { border:none; }
+    .ev-time { color:#555; }
+    .ev-name { color:#e84d2e; font-weight:600; white-space:nowrap; }
+    .ev-params { color:#888; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ga-empty { color:#444; font-size:.75rem; padding:16px; text-align:center; }
+
+    /* ─── FOOTER ─── */
+    footer { padding:32px 48px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:.82rem; }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="logo">Shop<span>Nova</span></div>
+  <ul class="nav-links">
+    <li><a href="#" onclick="trackEvent('nav_click',{link:'Home'})">Home</a></li>
+    <li><a href="#" onclick="trackEvent('nav_click',{link:'Shop'})">Shop</a></li>
+    <li><a href="#" onclick="trackEvent('nav_click',{link:'Deals'})">Deals</a></li>
+    <li><a href="#" onclick="trackEvent('nav_click',{link:'About'})">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="search-wrap">
+      <input type="text" id="search-input" placeholder="Search products…" />
+      <button onclick="handleSearch()">⌕</button>
+    </div>
+    <button class="btn btn-outline" onclick="trackCTA('Sign In')">Sign In</button>
+    <button class="btn btn-primary" onclick="trackCTA('Get Started')">Get Started</button>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-copy">
+    <p class="hero-eyebrow">New arrivals · Spring 2025</p>
+    <h1 class="hero-h1">Products you'll <em>actually</em> love.</h1>
+    <p class="hero-sub">Curated picks, unbeatable prices. Free shipping on orders over $50.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="trackCTA('Shop Now')">Shop Now →</button>
+      <button class="btn btn-outline" onclick="trackCTA('View Deals')">View Deals</button>
+    </div>
+  </div>
+  <div class="hero-img">
+    <div class="hero-blob"></div>
+    <div class="hero-product-card">
+      <div class="big-price">$129</div>
+      <div class="prod-name">Nova Pro Headphones</div>
+      <div class="prod-tag">🔥 Best Seller</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRODUCTS ─── -->
+<section class="products-section" id="products">
+  <div class="section-title">Featured <span>Products</span></div>
+  <div class="products-grid">
+
+    <div class="product-card" onclick="trackProductView('Wireless Earbuds','SKU-001',89)">
+      <div class="product-img" style="background:#f0f4ff;">🎧</div>
+      <div class="product-info">
+        <div class="product-name">Wireless Earbuds</div>
+        <div class="product-price">$89.00</div>
+        <div class="product-actions">
+          <button class="btn-sm btn-sm-solid" onclick="event.stopPropagation();trackAddToCart('Wireless Earbuds','SKU-001',89)">Add to Cart</button>
+          <button class="btn-sm btn-sm-ghost" onclick="event.stopPropagation();trackEvent('wishlist_add',{item:'Wireless Earbuds'})">♡ Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" onclick="trackProductView('Smart Watch','SKU-002',199)">
+      <div class="product-img" style="background:#fff5f0;">⌚</div>
+      <div class="product-info">
+        <div class="product-name">Smart Watch</div>
+        <div class="product-price">$199.00</div>
+        <div class="product-actions">
+          <button class="btn-sm btn-sm-solid" onclick="event.stopPropagation();trackAddToCart('Smart Watch','SKU-002',199)">Add to Cart</button>
+          <button class="btn-sm btn-sm-ghost" onclick="event.stopPropagation();trackEvent('wishlist_add',{item:'Smart Watch'})">♡ Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" onclick="trackProductView('Laptop Stand','SKU-003',49)">
+      <div class="product-img" style="background:#f0fff4;">💻</div>
+      <div class="product-info">
+        <div class="product-name">Laptop Stand</div>
+        <div class="product-price">$49.00</div>
+        <div class="product-actions">
+          <button class="btn-sm btn-sm-solid" onclick="event.stopPropagation();trackAddToCart('Laptop Stand','SKU-003',49)">Add to Cart</button>
+          <button class="btn-sm btn-sm-ghost" onclick="event.stopPropagation();trackEvent('wishlist_add',{item:'Laptop Stand'})">♡ Save</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── PROMO BAND ─── -->
+<div class="promo-band">
+  <h2>Get <em>20% off</em> your first order. Use code <em>NOVA20</em>.</h2>
+  <button class="btn btn-primary" onclick="trackCTA('Claim Discount')">Claim Discount →</button>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div>© 2025 ShopNova. All rights reserved.</div>
+  <div>GA4 Measurement ID: <code>G-XXXXXXXXXX</code></div>
+</footer>
+
+<!-- ─── GA EVENT LOG PANEL (demo only — remove in production) ─── -->
+<div class="ga-panel">
+  <div class="ga-header"><div class="ga-dot"></div> GA4 Event Log (demo)</div>
+  <div id="ev-log"><div class="ga-empty">Interact with the page to fire events →</div></div>
+</div>
+
+<script>
+  // Search handler
+  function handleSearch() {
+    const val = document.getElementById('search-input').value.trim();
+    if (val) { trackSearch(val); document.getElementById('search-input').value = ''; }
+  }
+  document.getElementById('search-input').addEventListener('keydown', e => { if (e.key==='Enter') handleSearch(); });
+
+  // Scroll depth tracking (25 / 50 / 75 / 90 %)
+  const scrollMilestones = new Set();
+  window.addEventListener('scroll', () => {
+    const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+    [25,50,75,90].forEach(m => { if (pct >= m && !scrollMilestones.has(m)) { scrollMilestones.add(m); trackScrollDepth(m); } });
+  });
+
+  // Page view already fired by gtag('config',…) above — log it to the panel
+  logToUI('page_view', { page_title: document.title, page_location: window.location.href });
+</script>
+</body>
+</html>
